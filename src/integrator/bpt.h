@@ -37,8 +37,8 @@ namespace Integrator
 
 		std::unique_ptr<Random::Polymorphic> p_random{ nullptr };
 
-		uint8_t const n_depth{ 1 };
-		uint16_t const n_samples{ 1 };
+		uint8_t const max_depth{ 1 };
+		uint16_t const max_samples{ 1 };
 
 		Render::Scene scene;
 
@@ -50,7 +50,7 @@ namespace Integrator
 			std::unique_ptr<Random::Polymorphic>& p_random
 
 		)
-			: scene( scene ), p_random( std::move( p_random ) ), n_depth( config.n_depth ), n_samples( config.n_samples )
+			: scene( scene ), p_random( std::move( p_random ) ), max_depth( config.max_depth ), max_samples( config.max_samples )
 		{};
 
 		Colour process(
@@ -59,7 +59,7 @@ namespace Integrator
 		) const override
 		{
 			Colour accumulate( Colour::Black );
-			for ( uint16_t s = 0; s < n_samples; ++s )
+			for ( uint16_t s = 0; s < max_samples; ++s )
 			{
 				// In the paper light start is part of the light path
 				std::vector<Integrator::Vertex> light_start;
@@ -78,7 +78,7 @@ namespace Integrator
 				Ray::Section ray = scene.camera_ray( x, y, s );
 				accumulate += camera_path( ray, light_start, light_path );
 			}
-			return accumulate / n_samples;
+			return accumulate / static_cast<float>( max_samples );
 		};
 
 	private:
@@ -104,7 +104,7 @@ namespace Integrator
 				if ( ( bxdf_event == BxDF::Event::Diffuse ) )
 					light_path.emplace_back( Integrator::Vertex( idata, throughput ) );
 
-				if ( ++depth >= n_depth )
+				if ( ++depth >= max_depth )
 					break;
 
 				throughput *= bxdf_colour;
@@ -192,7 +192,7 @@ namespace Integrator
 					accumulate += throughput * implicit_light;
 				}
 
-				if ( ++depth >= n_depth )
+				if ( ++depth >= max_depth )
 					break;
 
 				throughput *= bxdf_colour;

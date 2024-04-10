@@ -1,15 +1,14 @@
 #pragma once
 
-#include "../ray/section.h"
-#include <utility>
-#include <tuple>
-#include "../colour/colour.h"
-#include "../mathematics/double3.h"
-#include "../random/polymorphic.h"
-#include "../emitter/polymorphic.h"
-#include "../mathematics/orthogonal.h"
 #include <cmath>
-#include "../sample/sphere.h"
+#include <tuple>
+#include <utility>
+
+#include "../colour/colour.h"
+#include "../emitter/polymorphic.h"
+#include "../mathematics/double3.h"
+#include "../mathematics/orthogonal.h"
+#include "../random/polymorphic.h"
 #include "../sample/hemisphere.h"
 
 namespace Emitter

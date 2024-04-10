@@ -1,12 +1,15 @@
 #pragma once
 
 #include <algorithm>
+#include <cfloat>
 
 struct Colour
 {
-	float r, g, b;
+	float r{ 0.f };
+	float g{ 0.f };
+	float b{ 0.f };
 
-	Colour() :r( 0 ), g( 0 ), b( 0 ) {};
+	Colour() {};
 
 	Colour( float const& r, float const& g, float const& b ) : r( r ), g( g ), b( b ) {};
 
@@ -21,9 +24,10 @@ struct Colour
 	Colour operator += ( Colour const& value ) { r += value.r; g += value.g, b += value.b; return *this; };
 	Colour operator *= ( Colour const& value ) { r *= value.r; g *= value.g, b *= value.b; return *this; };
 
-	float const max_value() { return std::max( { r, g, b } ); };
+	float max_value() const { return std::max( { r, g, b } ); };
 
-	bool is_black() const { return std::max( { r, g, b } ) < 1e-5; }; // TODO magic constant
+	// When all values are near zero, they are considered zero
+	bool is_black() const { return std::max( { r, g, b } ) < FLT_EPSILON; };
 
 	Colour& clamp()
 	{

@@ -13,7 +13,7 @@ namespace Ray
 		Double3 origin;
 		Double3 direction;
 
-		Section() : origin( Double3( 0, 0, 0 ) ), direction( Double3( 0, 0, 0 ) ) {};
+		Section() : origin( Double3::Zero ), direction( Double3::Z ) {};
 
 		Section(
 			Double3 const& origin,

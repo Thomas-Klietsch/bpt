@@ -16,40 +16,39 @@
 // Public License along with this program.If not, see < https://www.gnu.org/licenses/>. 
 
 #include <chrono>
-#include <iostream>
 #include <cstdlib>
+#include <iostream>
 
 #include "render/config.h"
-#include "render/scene.h"
 #include "render/image.h"
+#include "render/scene.h"
 
 int main( int argc, char* argv[] )
 {
 	Render::Config const config( 800, 800, 5, 1 );
 
 	Render::Scene const scene( config );
-
 	if ( !scene.n_light() || !scene.n_object() )
 	{
-		std::cout << "Nothing to render, no light or object(s)." << std::endl;
+		std::cout << "Nothing to render, no light and/or object(s)." << std::endl;
 		return EXIT_FAILURE;
 	}
 
 	Render::Image image( scene, config );
-	std::cout << "Render:" << std::endl;
 
+	std::cout << "Render start." << std::endl;
 	std::chrono::steady_clock::time_point start_time = std::chrono::steady_clock::now();
 
 	image.render();
 
 	std::chrono::steady_clock::time_point stop_time = std::chrono::steady_clock::now();
 	std::chrono::milliseconds total_time = std::chrono::duration_cast<std::chrono::milliseconds>( stop_time - start_time );
-	std::cout << "Run time: " << total_time.count() << " millie seconds." << std::endl;
+	std::cout << "Render time: " << total_time.count() << " millie seconds." << std::endl;
 
 	std::cout << "Saving image." << std::endl;
 	if ( !image.save( "result" ) )
 	{
-		std::cout << "Could not save image." << std::endl;
+		std::cout << "PANIC! Could not save image." << std::endl;
 		return EXIT_FAILURE;
 	}
 

@@ -1,9 +1,10 @@
 #pragma once
 
+#include <cstdint>
 #include <tuple>
 #include <utility>
+
 #include "../random/polymorphic.h"
-#include <cstdint>
 
 namespace Random
 {

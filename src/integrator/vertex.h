@@ -1,8 +1,7 @@
 #pragma once
 
-#include "../mathematics/double3.h"
 #include "../colour/colour.h"
-#include <cstdint>
+#include "../mathematics/double3.h"
 #include "../ray/intersection.h"
 
 namespace Integrator

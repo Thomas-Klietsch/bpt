@@ -73,7 +73,7 @@ namespace Emitter
 			float const v = ( 1.f - e2 ) * e1_sqrt;
 			Double3 point = position + edge1 * u + edge2 * v;
 			Double3 direction = Sample::HemiSphere( random );
-			return { energy * area, point + normal * 0.01, local_space.to_world( direction.normalise() ), normal };
+			return { energy * area, point, local_space.to_world( direction.normalise() ), normal };
 		};
 
 	};

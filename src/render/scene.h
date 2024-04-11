@@ -1,33 +1,26 @@
 #pragma once
 
-#include <cmath>
-#include <cstdlib>
-#include <iostream>
-#include <fstream>
-#include <vector>
-#include <tuple>
 #include <cstdint>
 #include <memory>
+#include <tuple>
+#include <vector>
 
-#include "../geometry/polymorphic.h"
-#include "../ray/section.h"
-#include "../geometry/sphere.h"
-#include "../ray/intersection.h"
-#include "../mathematics/double3.h"
-#include "../bxdf/common.h"
-#include "../colour/colour.h"
+#include "../bxdf/emission.h"
 #include "../bxdf/lambert.h"
 #include "../bxdf/mirror.h"
-#include "../bxdf/emission.h"
 #include "../bxdf/polymorphic.h"
-#include "../random/polymorphic.h"
+#include "../colour/colour.h"
 #include "../emitter/polymorphic.h"
-#include "../geometry/triangle.h"
 #include "../emitter/triangle.h"
-#include <string>
-#include "../render/camera.h"
-#include "config.h"
+#include "../geometry/polymorphic.h"
+#include "../geometry/triangle.h"
+#include "../mathematics/double3.h"
+#include "../random/polymorphic.h"
 #include "../random/rand.h"
+#include "../ray/intersection.h"
+#include "../ray/section.h"
+#include "../render/camera.h"
+#include "../render/config.h"
 
 namespace Render
 {
@@ -49,7 +42,7 @@ namespace Render
 
 	public:
 
-		Scene() {};
+		Scene() = delete;
 
 		Scene(
 			Render::Config const& config
@@ -58,9 +51,9 @@ namespace Render
 			std::unique_ptr<Random::Polymorphic> p_random = std::make_unique< Random::Rand>();
 			camera = Render::Camera( Double3( -278, -800, 273 ), Double3( -278, 0, 273 ), config, p_random );
 
-			bxdf.emplace_back( std::make_shared<BxDF::Lambert>( "white", Colour( .8, .8, .8 ) ) );
-			bxdf.emplace_back( std::make_shared<BxDF::Lambert>( "red", Colour( 0.8, 0.15, 0.15 ) ) );
-			bxdf.emplace_back( std::make_shared<BxDF::Lambert>( "green", Colour( 0.16, 0.8, 0.17 ) ) );
+			bxdf.emplace_back( std::make_shared<BxDF::Lambert>( Colour( .8f, .8f, .8f ) ) ); // White
+			bxdf.emplace_back( std::make_shared<BxDF::Lambert>( Colour( 0.8f, 0.15f, 0.15f ) ) ); // Red
+			bxdf.emplace_back( std::make_shared<BxDF::Lambert>( Colour( 0.16f, 0.8f, 0.17f ) ) ); // Green
 
 			// Cornell (big box)
 			Double3 cbox[ 8 ] = {
@@ -154,8 +147,8 @@ namespace Render
 				Double3( -343.0, 332.0, 548.8 - 0.01 ),
 			};
 
-			Colour energy = ( Colour( 0., .929, .659 ) * 8. + Colour( 1., .447, .0 ) * 15.6 + Colour( 0.376, 0., 0. ) * 18.4 );
-			bxdf.emplace_back( std::make_shared<BxDF::Emission>( "light", energy ) );
+			Colour energy = ( Colour( 0.f, .929f, .659f ) * 8.f + Colour( 1.f, .447f, .0f ) * 15.6f + Colour( 0.376f, 0.f, 0.f ) * 18.4f );
+			bxdf.emplace_back( std::make_shared<BxDF::Emission>( energy ) );
 
 			geometry.emplace_back( std::make_shared<Geometry::Triangle>( light[ 2 ], light[ 3 ], light[ 1 ], 3 ) );
 			geometry.emplace_back( std::make_shared<Geometry::Triangle>( light[ 2 ], light[ 1 ], light[ 0 ], 3 ) );
@@ -163,8 +156,7 @@ namespace Render
 			emitter.emplace_back( std::make_shared<Emitter::Triangle>( light[ 2 ], light[ 3 ], light[ 1 ], energy ) );
 			emitter.emplace_back( std::make_shared<Emitter::Triangle>( light[ 2 ], light[ 1 ], light[ 0 ], energy ) );
 
-			//bxdf.emplace_back( std::make_shared<BxDF::Mirror>( "mirror" ) );
-			//bxdf.emplace_back( std::make_shared<BxDF::Glass>( "glass", 1.0, 1.5 ) );
+			bxdf.emplace_back( std::make_shared<BxDF::Mirror>( Colour::White ) );
 
 			n_geometry = geometry.size();
 			n_emitter = emitter.size();

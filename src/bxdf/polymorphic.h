@@ -1,12 +1,12 @@
 #pragma once
-#include <string>
+
+#include <tuple>
 #include <utility>
 
-#include "../mathematics/double3.h"
-#include "../colour/colour.h"
-#include "../ray/intersection.h"
 #include "../bxdf/common.h"
-#include <tuple>
+#include "../colour/colour.h"
+#include "../mathematics/double3.h"
+#include "../ray/intersection.h"
 #include "../random/polymorphic.h"
 
 namespace BxDF
@@ -26,8 +26,6 @@ namespace BxDF
 			Double3 const& evaluate_direction,
 			Ray::Intersection const& idata
 		) const = 0;
-
-		virtual std::string const& bxdf_name() const = 0;
 
 	};
 

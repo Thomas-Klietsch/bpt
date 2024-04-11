@@ -1,17 +1,13 @@
 #pragma once
 
-#include <string>
 #include <tuple>
 
+#include "../bxdf/common.h"
 #include "../bxdf/polymorphic.h"
 #include "../colour/colour.h"
 #include "../mathematics/double3.h"
-#include "../ray/intersection.h"
-#include "../mathematics/constant.h"
-#include <cmath>
-#include "../bxdf/common.h"
-#include <cstdint>
 #include "../random/polymorphic.h"
+#include "../ray/intersection.h"
 
 namespace BxDF
 {
@@ -28,7 +24,6 @@ namespace BxDF
 		Emission() = delete;
 
 		Emission(
-			std::string const& name,
 			Colour const& energy
 		)
 			: energy( energy )
@@ -39,22 +34,17 @@ namespace BxDF
 			Random::Polymorphic &random
 		) const override
 		{
-			// Returns radiance
+			// Direct hit on emitter is not affected by surface area,
+			// nor does it generate a new direction
 			return { energy, {}, BxDF::Event::Emission };
 		};
 
-		// TODO
 		Colour evaluate(
 			Double3 const& evaluate_direction,
 			Ray::Intersection const& idata
 		) const override
 		{
 			return Colour::Black;
-		};
-
-		std::string const& bxdf_name() const override
-		{
-			return ""; // TODO
 		};
 
 	};

@@ -1,32 +1,17 @@
 #pragma once
 
-/*enum ReflectionType
-{
-	DIFF,
-	SPEC,
-	REFR,
-	GLOSSY,
-	TRANSL,
-	EMIT
-};*/
+#include <cstdint>
 
 namespace BxDF
 {
 
-	enum class Event
+	enum class Event : uint8_t
 	{
 		None,
 		Diffuse,
-		Dirac,
-		Emission
-/*		Specular,
-		Refract,
-		Enter,
-		Exit,
-		Glossy,
-		Translucient,
 		Emission,
-		Dirac = Specular | Refract*/
+		Reflect,
+		Transmit
 	};
 
 };

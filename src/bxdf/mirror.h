@@ -20,16 +20,14 @@ namespace BxDF
 
 	private:
 
-		std::string name;
+		Colour reflectance;
 
 	public:
 
 		Mirror() = delete;
 
-		Mirror(
-			std::string const& name
-		)
-			: name( name )
+		Mirror( Colour const& reflectance )
+			: reflectance( reflectance )
 		{};
 
 		std::tuple<Colour, Double3, BxDF::Event> sample(
@@ -38,8 +36,7 @@ namespace BxDF
 		) const override
 		{
 			Double3 const wsample_local( -idata.local_wray.x, -idata.local_wray.y, idata.local_wray.z );
-
-			return { Colour::White, idata.orthogonal.to_world( wsample_local ), BxDF::Event::Dirac };
+			return { reflectance, idata.orthogonal.to_world( wsample_local ), BxDF::Event::Reflect };
 		};
 
 		Colour evaluate(
@@ -48,11 +45,6 @@ namespace BxDF
 		) const override
 		{
 			return Colour::Black;
-		};
-
-		std::string const& bxdf_name() const override
-		{
-			return name;
 		};
 
 	};

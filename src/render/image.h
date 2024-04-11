@@ -1,26 +1,28 @@
 #pragma once
 
-#include "../ray/section.h"
-#include "../integrator/polymorphic.h"
-#include "../mathematics/double3.h"
-#include "../colour/colour.h"
-#include "../random/polymorphic.h"
-#include "../mathematics/constant.h"
-#include <cmath>
-#include <memory>
-#include "../render/scene.h"
-#include <vector>
-#include "../integrator/bpt.h"
-#include <type_traits>
-#include <cstdint>
-#include <omp.h>
-#include <string>
-#include <stdio.h>
 #include <algorithm>
-#include "config.h"
-#include "../random/mersenne.h"
+#include <cmath>
+#include <cstdint>
+#include <fstream>
 #include <iosfwd>
+#include <memory>
 #include <omp.h>
+#include <omp.h>
+#include <stdio.h>
+#include <string>
+#include <type_traits>
+#include <vector>
+
+#include "../colour/colour.h"
+#include "../integrator/bpt.h"
+#include "../integrator/polymorphic.h"
+#include "../mathematics/constant.h"
+#include "../mathematics/double3.h"
+#include "../random/mersenne.h"
+#include "../random/polymorphic.h"
+#include "../ray/section.h"
+#include "../render/config.h"
+#include "../render/scene.h"
 
 namespace Render
 {
@@ -124,12 +126,12 @@ namespace Render
 				p_data[ 18 ] = 0;
 
 			// Set image, TGA uses BGR colour order
-			for ( uint32_t i = 0; i < ( image_width * image_height ); ++i )
+			for ( uint32_t i = 0; i < image_width * image_height; ++i )
 			{
 				Colour& c = image_data[ i ];
-				uint8_t r = std::pow( std::clamp( c.r, 0.f, 1.f ), 1.f / 2.2f ) * 255;
-				uint8_t g = std::pow( std::clamp( c.g, 0.f, 1.f ), 1.f / 2.2f ) * 255;
-				uint8_t b = std::pow( std::clamp( c.b, 0.f, 1.f ), 1.f / 2.2f ) * 255;
+				uint8_t r = static_cast<uint8_t>( std::pow( std::clamp( c.r, 0.f, 1.f ), 1.f / 2.2f ) * 255 );
+				uint8_t g = static_cast<uint8_t>( std::pow( std::clamp( c.g, 0.f, 1.f ), 1.f / 2.2f ) * 255 );
+				uint8_t b = static_cast<uint8_t>( std::pow( std::clamp( c.b, 0.f, 1.f ), 1.f / 2.2f ) * 255 );
 				p_data[ i * 3 + tga_header_size ] = b;
 				p_data[ i * 3 + 1 + tga_header_size ] = g;
 				p_data[ i * 3 + 2 + tga_header_size ] = r;

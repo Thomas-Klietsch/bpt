@@ -21,7 +21,7 @@ public:
 	Double3 operator * ( double const& value ) const { return Double3( x * value, y * value, z * value ); };
 	Double3 operator / ( double const& value ) const { return Double3( x / value, y / value, z / value ); };
 
-	Double3& operator = ( Double3 const& value ) { x = value.x; y = value.y; z = value.z; return *this; };
+	Double3 operator = ( Double3 const& value ) { x = value.x; y = value.y; z = value.z; return *this; };
 
 	Double3 normalise() const { return Double3( x, y, z ) / std::sqrt( x * x + y * y + z * z ); };
 

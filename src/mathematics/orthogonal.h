@@ -4,8 +4,6 @@
 
 #include "../mathematics/double3.h"
 
-// Handness http://www.f-lohmueller.de/pov_tut/a_geo/a_geo85e.htm
-
 class Orthogonal final
 {
 

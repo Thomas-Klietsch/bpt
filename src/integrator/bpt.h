@@ -1,28 +1,21 @@
 #pragma once
 
-#include "../integrator/polymorphic.h"
-#include "../mathematics/double3.h"
-#include "../geometry/polymorphic.h"
-#include <vector>
-#include "../colour/colour.h"
-#include <map>
-#include "../integrator/vertex.h"
-#include "../ray/section.h"
-#include <utility>
-#include <cmath>
-#include "../mathematics/orthogonal.h"
-#include "../bxdf/common.h"
 #include <cstdint>
-#include "../render/scene.h"
 #include <memory>
-#include "../ray/intersection.h"
-#include "../mathematics/constant.h"
-#include "../random/polymorphic.h"
 #include <type_traits>
-#include "../render/config.h"
-#include <omp.h>
+#include <vector>
+
+#include "../bxdf/common.h"
 #include "../bxdf/polymorphic.h"
-#include "../mathematics/epsilon.h"
+#include "../colour/colour.h"
+#include "../epsilon.h"
+#include "../integrator/polymorphic.h"
+#include "../integrator/vertex.h"
+#include "../mathematics/double3.h"
+#include "../random/polymorphic.h"
+#include "../ray/section.h"
+#include "../render/config.h"
+#include "../render/scene.h"
 
 namespace Integrator
 {
@@ -37,6 +30,7 @@ namespace Integrator
 
 		std::unique_ptr<Random::Polymorphic> p_random{ nullptr };
 
+#pragma warning ( suppress: 4244 )
 		uint8_t const max_depth{ 1 };
 		uint16_t const max_samples{ 1 };
 

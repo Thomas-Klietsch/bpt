@@ -1,7 +1,8 @@
 #pragma once
 
 #include <algorithm>
-#include <cfloat>
+
+#include "../epsilon.h"
 
 struct Colour
 {
@@ -26,8 +27,7 @@ struct Colour
 
 	float max_value() const { return std::max( { r, g, b } ); };
 
-	// When all values are near zero, they are considered zero
-	bool is_black() const { return std::max( { r, g, b } ) < FLT_EPSILON; };
+	bool is_black() const { return std::max( { r, g, b } ) < EPSILON_BLACK; };
 
 	Colour& clamp()
 	{

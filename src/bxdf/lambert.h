@@ -1,17 +1,14 @@
 #pragma once
 
-#include <string>
 #include <tuple>
 
-#include "../bxdf/polymorphic.h"
-#include "../mathematics/double3.h"
-#include "../ray/intersection.h"
-#include "../mathematics/constant.h"
-#include <cmath>
 #include "../bxdf/common.h"
+#include "../bxdf/polymorphic.h"
 #include "../colour/colour.h"
+#include "../mathematics/constant.h"
+#include "../mathematics/double3.h"
 #include "../random/polymorphic.h"
-#include "../sample/sphere.h"
+#include "../ray/intersection.h"
 #include "../sample/hemisphere.h"
 
 namespace BxDF
@@ -22,7 +19,6 @@ namespace BxDF
 
 	private:
 
-		std::string name;
 		Colour albedo;
 
 	public:
@@ -30,10 +26,9 @@ namespace BxDF
 		Lambert() = delete;
 
 		Lambert(
-			std::string const& name,
 			Colour const& albedo
 		)
-			: name( name ), albedo( albedo )
+			: albedo( albedo )
 		{};
 
 		std::tuple<Colour, Double3, BxDF::Event> sample(
@@ -42,6 +37,7 @@ namespace BxDF
 		) const override
 		{
 			Double3 const sample_direction = Sample::HemiSphere( random );
+#pragma warning ( suppress: 4244 )
 			return { albedo * inv_pi * sample_direction.z, idata.orthogonal.to_world( sample_direction ), BxDF::Event::Diffuse };
 		};
 
@@ -52,12 +48,8 @@ namespace BxDF
 		{
 			// One sided material
 			double const cos_theta = evaluate_direction.dot( idata.normal );
+#pragma warning ( suppress: 4244 )
 			return cos_theta > 0 ? albedo * inv_pi * cos_theta : Colour::Black;
-		};
-
-		std::string const& bxdf_name() const override
-		{
-			return name;
 		};
 
 	};

@@ -158,8 +158,8 @@ namespace Render
 
 			bxdf.emplace_back( std::make_shared<BxDF::Mirror>( Colour::White ) );
 
-			n_geometry = geometry.size();
-			n_emitter = emitter.size();
+			n_geometry = static_cast<uint32_t>( geometry.size());
+			n_emitter = static_cast<uint32_t>( emitter.size());
 		};
 
 		std::tuple<bool, double, Ray::Intersection> intersect( Ray::Section const& ray ) const

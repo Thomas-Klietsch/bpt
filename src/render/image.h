@@ -36,8 +36,12 @@ namespace Render
 
 		uint16_t image_width{ 0 };
 		uint16_t image_height{ 0 };
+		uint32_t n_pixel{ 0 };
 
 		std::shared_ptr<Colour[]> image_data{ nullptr };
+
+		// Fix for libgdk (Linux), if it detects TGA as ICO set this to true
+		bool const f_libgdk = false;
 
 	public:
 
@@ -47,7 +51,7 @@ namespace Render
 			Render::Scene const& scene,
 			Render::Config const& config
 		)
-			: image_width( config.image_width ), image_height( config.image_height )
+			: image_width( config.image_width ), image_height( config.image_height ), n_pixel( config.image_width * config.image_height )
 		{
 			// Shared pointer, since unique_ptr can not use init value? (black)
 			image_data = std::make_shared<Colour[]>( image_width * image_height, Colour::Black );
@@ -60,8 +64,10 @@ namespace Render
 
 		void render()
 		{
-			// Lazy arse parallel processing. This blows up if not all threads are set in constructor.
+			// Ignore Microsoft VS warning about omp
+#pragma warning ( suppress: 6993 )
 #pragma omp parallel for
+			// Lazy arse parallel processing. xD
 			for ( int y = 0; y < image_height; ++y )
 				for ( int x = 0; x < image_width; ++x )
 					image_data[ x + y * image_width ] = integrator[ omp_get_thread_num() ]->process( x, y );
@@ -79,11 +85,8 @@ namespace Render
 			if ( !tga_file.is_open() )
 				return false;
 
-			// Fix for libgdk (Linux), if it detects TGA as ICO set this to true
-			bool const f_libgdk = false;
-
 			uint8_t const tga_header_size = 18 + ( f_libgdk ? 1 : 0 );
-			uint32_t const tga_data_size = tga_header_size + image_width * image_height * 3;
+			uint32_t const tga_data_size = tga_header_size + n_pixel * 3;
 
 			std::shared_ptr<uint8_t[]> p_data = std::make_shared<uint8_t[]>( tga_data_size, 0 );
 			if ( !p_data )
@@ -126,7 +129,7 @@ namespace Render
 				p_data[ 18 ] = 0;
 
 			// Set image, TGA uses BGR colour order
-			for ( uint32_t i = 0; i < image_width * image_height; ++i )
+			for ( uint32_t i = 0; i < n_pixel; ++i )
 			{
 				Colour& c = image_data[ i ];
 				uint8_t r = static_cast<uint8_t>( std::pow( std::clamp( c.r, 0.f, 1.f ), 1.f / 2.2f ) * 255 );
@@ -140,6 +143,8 @@ namespace Render
 			// Dump p_data from memory to file
 			tga_file.write( (char*)( &p_data[ 0 ] ), tga_data_size );
 			tga_file.close();
+
+			return true;
 		};
 
 	}; // end image class

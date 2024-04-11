@@ -25,7 +25,7 @@
 
 int main( int argc, char* argv[] )
 {
-	Render::Config const config( 800, 800, 5, 1 );
+	Render::Config const config( 800, 800, 1, 5 );
 
 	Render::Scene const scene( config );
 	if ( !scene.n_light() || !scene.n_object() )

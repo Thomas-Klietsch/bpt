@@ -1,12 +1,12 @@
 #pragma once
 
+#include <array>
 #include <cfloat>
 #include <cmath>
 #include <cstdint>
 #include <cstdlib>
 #include <iostream>
 #include <memory>
-#include <tuple>
 #include <vector>
 
 #include "../mathematics/constant.h"
@@ -36,7 +36,7 @@ namespace Render
 		Double3 right{ Double3::X };
 		Double3 up{ Double3::Z };
 
-		std::vector<std::tuple<float, float>> random;
+		std::vector<std::array<float, 2>> random;
 
 	public:
 
@@ -68,7 +68,7 @@ namespace Render
 			for ( uint16_t i = 0; i < max_samples; ++i )
 			{
 				auto [e1, e2] = p_random->get_float2();
-				random.push_back( { e1 - 0.5, e2 - 0.5 } );
+				random.push_back( { e1 - 0.5f, e2 - 0.5f } );
 			}
 		};
 
@@ -78,11 +78,11 @@ namespace Render
 			uint16_t const& sample
 		) const
 		{
-			auto [e1, e2] = random[ sample % max_samples ];
+			std::array<float, 2> const& rnd = random[ sample % max_samples ];
 
 			Double3 dir = forward +
-				right * ( ( static_cast<float>( x ) + e1 ) / static_cast<float>( image_width - 1 ) - 0.5 ) +
-				up * ( ( static_cast<float>( y ) + e2 ) / static_cast<float>( image_height - 1 ) - 0.5 );
+				right * ( ( static_cast<float>( x ) + rnd[ 0 ] ) / static_cast<float>( image_width - 1 ) - 0.5 ) +
+				up * ( ( static_cast<float>( y ) + rnd[ 1 ] ) / static_cast<float>( image_height - 1 ) - 0.5 );
 
 			return Ray::Section( position, dir.normalise() );
 		};

@@ -3,6 +3,7 @@
 #include <algorithm>
 
 #include "../epsilon.h"
+#include <utility>
 
 struct Colour
 {
@@ -29,11 +30,21 @@ struct Colour
 
 	bool is_black() const { return std::max( { r, g, b } ) < EPSILON_BLACK; };
 
-	Colour& clamp()
+	// Limit values to [0;1]
+	Colour clamp()
 	{
 		r = std::clamp( r, 0.f, 1.f );
 		g = std::clamp( g, 0.f, 1.f );
 		b = std::clamp( b, 0.f, 1.f );
+		return *this;
+	};
+
+	// Limit values to [0;inf[
+	Colour clip()
+	{
+		r = std::max( r, 0.f );
+		g = std::max( g, 0.f );
+		b = std::max( b, 0.f );
 		return *this;
 	};
 

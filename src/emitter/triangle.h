@@ -28,38 +28,23 @@ namespace Emitter
 
 		Colour energy;
 
-		double area;
-
 	public:
+
+		Triangle() = delete;
 
 		Triangle(
 			Double3 const& a,
 			Double3 const& b,
 			Double3 const& c,
-			Colour const& energy
+			Colour const& a_energy
 		) :
-			position( a ), edge1( b - a ), edge2( c - a ), energy( energy )
+			position( a ), edge1( b - a ), edge2( c - a )
 		{
-			normal = ( edge1.cross( edge2 ) ).normalise();
+			Double3 const cross_product = edge1.cross( edge2 );
+			normal = ( cross_product ).normalise();
 			local_space = Orthogonal( normal );
-			area = .5 * ( edge1.cross( edge2 ) ).magnitude();
-		};
-
-		std::tuple<Colour, Double3, double> evaluate(
-			Double3 const& point_illuminated,
-			Random::Polymorphic& random
-		) const override
-		{
-			auto const [e1, e2] = random.get_float2();
-			float const temp = std::sqrt( e1 );
-			float const u = 1.f - temp;
-			float const v = e2 * temp;
-			Double3 point = position + edge1 * u + edge2 * v;
-			Double3 diff = point - point_illuminated;
-			Double3 direction = ( diff ).normalise();
-			double cos_theta = std::max( .0, -( normal.dot( direction ) ) );
-			double distance = ( diff ).magnitude();
-			return { energy * ( area * cos_theta / ( distance * distance ) ), direction, distance };
+			double area = .5 * ( cross_product ).magnitude();
+			energy = ( a_energy * area ).clip();
 		};
 
 		std::tuple <Colour, Double3, Double3, Double3> emit(
@@ -73,7 +58,7 @@ namespace Emitter
 			float const v = ( 1.f - e2 ) * e1_sqrt;
 			Double3 point = position + edge1 * u + edge2 * v;
 			Double3 direction = Sample::HemiSphere( random );
-			return { energy * area, point, local_space.to_world( direction.normalise() ), normal };
+			return { energy, point, local_space.to_world( direction.normalise() ), normal };
 		};
 
 	};

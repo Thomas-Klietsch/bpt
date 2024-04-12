@@ -54,7 +54,7 @@ namespace Render
 			: image_width( config.image_width ), image_height( config.image_height ), n_pixel( config.image_width * config.image_height )
 		{
 			// Shared pointer, since unique_ptr can not use init value? (black)
-			image_data = std::make_shared<Colour[]>( image_width * image_height, Colour::Black );
+			image_data = std::make_shared<Colour[]>( n_pixel, Colour::Black );
 			for ( uint8_t i = 0; i < omp_get_max_threads(); ++i )
 			{
 				std::unique_ptr< Random::Polymorphic > random = std::make_unique< Random::Mersenne>( ( i + 0x1337 ) * 0xbeef );

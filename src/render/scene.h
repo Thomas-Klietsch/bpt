@@ -147,8 +147,8 @@ namespace Render
 				Double3( -343.0, 332.0, 548.8 - 0.01 ),
 			};
 
-			Colour energy = ( Colour( 0.f, .929f, .659f ) * 8.f + Colour( 1.f, .447f, .0f ) * 15.6f + Colour( 0.376f, 0.f, 0.f ) * 18.4f );
-			bxdf.emplace_back( std::make_shared<BxDF::Emission>( energy ) );
+			Colour energy = Colour( 0.f, .929f, .659f ) * 8.f + Colour( 1.f, .447f, .0f ) * 15.6f + Colour( 0.376f, 0.f, 0.f ) * 18.4f;
+			bxdf.emplace_back( std::make_shared<BxDF::Emission>( energy.clip() ) );
 
 			geometry.emplace_back( std::make_shared<Geometry::Triangle>( light[ 2 ], light[ 3 ], light[ 1 ], 3 ) );
 			geometry.emplace_back( std::make_shared<Geometry::Triangle>( light[ 2 ], light[ 1 ], light[ 0 ], 3 ) );
@@ -158,8 +158,8 @@ namespace Render
 
 			bxdf.emplace_back( std::make_shared<BxDF::Mirror>( Colour::White ) );
 
-			n_geometry = static_cast<uint32_t>( geometry.size());
-			n_emitter = static_cast<uint32_t>( emitter.size());
+			n_geometry = static_cast<uint32_t>( geometry.size() );
+			n_emitter = static_cast<uint32_t>( emitter.size() );
 		};
 
 		std::tuple<bool, double, Ray::Intersection> intersect( Ray::Section const& ray ) const

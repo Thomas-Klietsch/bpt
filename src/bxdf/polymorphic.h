@@ -6,8 +6,8 @@
 #include "../bxdf/common.h"
 #include "../colour/colour.h"
 #include "../mathematics/double3.h"
-#include "../ray/intersection.h"
 #include "../random/polymorphic.h"
+#include "../ray/intersection.h"
 
 namespace BxDF
 {

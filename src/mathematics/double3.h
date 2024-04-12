@@ -7,9 +7,11 @@ class Double3 final
 
 public:
 
-	double x, y, z;
+	double x{ 0.0 };
+	double y{ 0.0 };
+	double z{ 0.0 };
 
-	Double3() : x( 0.0 ), y( 0.0 ), z( 0.0 ) {};
+	Double3() {};
 
 	Double3( double const& x, double const& y, double const& z ) : x( x ), y( y ), z( z ) {};
 
@@ -26,7 +28,9 @@ public:
 	Double3 normalise() const { return Double3( x, y, z ) / std::sqrt( x * x + y * y + z * z ); };
 
 	double dot( Double3 const& value ) const { return x * value.x + y * value.y + z * value.z; };
+
 	Double3 cross( Double3 const& value ) const { return Double3( y * value.z - z * value.y, z * value.x - x * value.z, x * value.y - y * value.x ); };
+
 	double magnitude() const { return std::sqrt( x * x + y * y + z * z ); };
 
 	Double3 static const Zero;

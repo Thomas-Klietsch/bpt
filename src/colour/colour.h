@@ -1,9 +1,9 @@
 #pragma once
 
 #include <algorithm>
+#include <utility>
 
 #include "../epsilon.h"
-#include <utility>
 
 struct Colour
 {

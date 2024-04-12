@@ -195,9 +195,9 @@ namespace Integrator
 						double distance = diff.magnitude();
 						if ( !scene.occluded( Ray::Section( idata.point, direction ), distance - EPSILON_DISTANCE ) )
 						{
-							Colour bxdf = material.evaluate( direction, idata );
-							Colour path = scene.material( light_path[ i ].idata.material_id )->evaluate( -direction, light_path[ i ].idata );
-							implicit_light += light_path[ i ].throughput * bxdf * path / ( distance * distance );
+							Colour bxdf_eval = material.evaluate( direction, idata );
+							Colour path_eval = scene.material( light_path[ i ].idata.material_id )->evaluate( -direction, light_path[ i ].idata );
+							implicit_light += light_path[ i ].throughput * bxdf_eval * path_eval / ( distance * distance );
 						}
 					}
 					accumulate += throughput * implicit_light;

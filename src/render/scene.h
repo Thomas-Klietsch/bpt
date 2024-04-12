@@ -15,8 +15,6 @@
 #include "../geometry/polymorphic.h"
 #include "../geometry/triangle.h"
 #include "../mathematics/double3.h"
-#include "../random/polymorphic.h"
-#include "../random/rand.h"
 #include "../ray/intersection.h"
 #include "../ray/section.h"
 #include "../render/camera.h"
@@ -48,15 +46,19 @@ namespace Render
 			Render::Config const& config
 		)
 		{
-			std::unique_ptr<Random::Polymorphic> p_random = std::make_unique< Random::Rand>();
-			camera = Render::Camera( Double3( -278, -800, 273 ), Double3( -278, 0, 273 ), config, p_random );
+			camera = Render::Camera( Double3( -278, -800, 273 ), Double3( -278, 0, 273 ), config );
 
 			bxdf.emplace_back( std::make_shared<BxDF::Lambert>( Colour( .8f, .8f, .8f ) ) ); // White
 			bxdf.emplace_back( std::make_shared<BxDF::Lambert>( Colour( 0.8f, 0.15f, 0.15f ) ) ); // Red
 			bxdf.emplace_back( std::make_shared<BxDF::Lambert>( Colour( 0.16f, 0.8f, 0.17f ) ) ); // Green
 
+			// The Cornell Box
+			// https://www.graphics.cornell.edu/online/box/
+
+			// Note that the order, and sign, of the data is altered here, as world up is the Z axis.
+
 			// Cornell (big box)
-			Double3 cbox[ 8 ] = {
+			Double3 const cbox[ 8 ] = {
 				Double3( 0.0, 0.0, 0.0 ),
 				Double3( 0.0, 0.0, 548.8 ),
 				Double3( 0.0, 559.2, 0.0 ),
@@ -83,7 +85,7 @@ namespace Render
 			geometry.emplace_back( std::make_shared<Geometry::Triangle>( cbox[ 0 ], cbox[ 3 ], cbox[ 2 ], 2 ) );
 
 			// Short block
-			Double3 sbox[ 8 ] =
+			Double3 const sbox[ 8 ] =
 			{
 				Double3( -82.0, 225.0, 0.0 ),
 				Double3( -82.0, 225.0, 165.0 ),
@@ -111,7 +113,7 @@ namespace Render
 			geometry.emplace_back( std::make_shared<Geometry::Triangle>( sbox[ 0 ], sbox[ 3 ], sbox[ 2 ], 0 ) );
 
 			// Tall block
-			Double3 tbox[ 8 ] =
+			Double3 const tbox[ 8 ] =
 			{
 				Double3( -265.0, 296.0, 0.0 ),
 				Double3( -265.0, 296.0, 330.0 ),
@@ -139,7 +141,7 @@ namespace Render
 			geometry.emplace_back( std::make_shared<Geometry::Triangle>( tbox[ 2 ], tbox[ 1 ], tbox[ 0 ], 0 ) );
 
 			// Offset to avoid "z fighting"
-			Double3 light[ 4 ] =
+			Double3 const light[ 4 ] =
 			{
 				Double3( -213.0, 227.0, 548.8 - 0.01 ),
 				Double3( -213.0, 332.0, 548.8 - 0.01 ),
@@ -179,8 +181,7 @@ namespace Render
 			if ( distance >= 1e19 )
 				return { false, {}, {} };
 
-			auto idata = geometry[ object_id ]->post_intersect( ray, distance, 0, {} );
-			//idata.object_id = object_id;
+			auto idata = geometry[ object_id ]->post_intersect( ray, distance );
 			return { true, distance, idata };
 		};
 

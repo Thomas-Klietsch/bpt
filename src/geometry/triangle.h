@@ -1,12 +1,13 @@
 #pragma once
 
+#include <cstdint>
+#include <cstdlib>
+
 #include "../geometry/polymorphic.h"
 #include "../mathematics/double3.h"
-#include <cstdint>
-#include "../ray/section.h"
-#include "../ray/intersection.h"
 #include "../mathematics/orthogonal.h"
-#include <cstdlib>
+#include "../ray/intersection.h"
+#include "../ray/section.h"
 
 namespace Geometry
 {
@@ -26,6 +27,8 @@ namespace Geometry
 		uint32_t material_id;
 
 	public:
+
+		Triangle() = delete;
 
 		Triangle(
 			Double3 const& a,
@@ -80,9 +83,7 @@ namespace Geometry
 
 		Ray::Intersection post_intersect(
 			Ray::Section const& ray,
-			double const& distance,
-			uint32_t const& polygon_id,
-			Double3 const& provisional_data
+			double const& distance
 		) const override
 		{
 			Ray::Intersection idata;

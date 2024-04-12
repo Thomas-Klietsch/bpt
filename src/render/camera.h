@@ -6,12 +6,11 @@
 #include <cstdint>
 #include <cstdlib>
 #include <iostream>
-#include <memory>
 #include <vector>
 
 #include "../mathematics/constant.h"
 #include "../mathematics/double3.h"
-#include "../random/polymorphic.h"
+#include "../random/rand.h"
 #include "../ray/section.h"
 #include "../render/config.h"
 
@@ -36,7 +35,7 @@ namespace Render
 		Double3 right{ Double3::X };
 		Double3 up{ Double3::Z };
 
-		std::vector<std::array<float, 2>> random;
+		std::vector<std::array<float, 2>> offset;
 
 	public:
 
@@ -45,8 +44,7 @@ namespace Render
 		Camera(
 			Double3 const& position,
 			Double3 const& look_at,
-			Render::Config const& config,
-			std::unique_ptr<Random::Polymorphic>& p_random
+			Render::Config const& config
 		)
 			: position( position ), image_width( config.image_width ), image_height( config.image_height ), max_samples( config.max_samples )
 		{
@@ -64,11 +62,13 @@ namespace Render
 			// Modern image formats/programmes have (0,0) at the top left, up is flipped
 			up = -( right.cross( forward ) ).normalise() * tan_fov;
 
+			Random::Rand prng( 1 );
+
 			// All camera paths use the same sequential offsets.
 			for ( uint16_t i = 0; i < max_samples; ++i )
 			{
-				auto [e1, e2] = p_random->get_float2();
-				random.push_back( { e1 - 0.5f, e2 - 0.5f } );
+				auto [e1, e2] = prng.get_float2();
+				offset.push_back( { e1 - 0.5f, e2 - 0.5f } );
 			}
 		};
 
@@ -78,7 +78,7 @@ namespace Render
 			uint16_t const& sample
 		) const
 		{
-			std::array<float, 2> const& rnd = random[ sample % max_samples ];
+			std::array<float, 2> const& rnd = offset[ sample % max_samples ];
 
 			Double3 dir = forward +
 				right * ( ( static_cast<float>( x ) + rnd[ 0 ] ) / static_cast<float>( image_width - 1 ) - 0.5 ) +

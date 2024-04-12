@@ -14,14 +14,14 @@ namespace Random
 
 	private:
 
-		// TODO
 		float const randmaxf = 1.f / 4294967295.f;
 
-		uint32_t seed{ 3 };
+		// Random seed found by rolling a d20
+		uint32_t seed{ 11 };
 
 	public:
 
-		Mersenne() {};
+		Mersenne() = delete;
 
 		Mersenne( uint32_t const& seed )
 			: seed( seed )

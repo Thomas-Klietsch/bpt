@@ -8,19 +8,14 @@
 #include <memory>
 #include <omp.h>
 #include <omp.h>
-#include <stdio.h>
 #include <string>
-#include <type_traits>
 #include <vector>
 
 #include "../colour/colour.h"
 #include "../integrator/bpt.h"
 #include "../integrator/polymorphic.h"
-#include "../mathematics/constant.h"
-#include "../mathematics/double3.h"
 #include "../random/mersenne.h"
 #include "../random/polymorphic.h"
-#include "../ray/section.h"
 #include "../render/config.h"
 #include "../render/scene.h"
 
@@ -64,7 +59,7 @@ namespace Render
 
 		void render()
 		{
-			// Ignore Microsoft VS warning about omp
+			// Ignore Microsoft Visual Studio warning about omp
 #pragma warning ( suppress: 6993 )
 #pragma omp parallel for
 			// Lazy arse parallel processing. xD

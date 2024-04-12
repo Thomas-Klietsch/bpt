@@ -37,7 +37,6 @@ namespace BxDF
 		) const override
 		{
 			Double3 const sample_direction = Sample::HemiSphere( random );
-#pragma warning ( suppress: 4244 )
 			return { albedo * inv_pi * sample_direction.z, idata.orthogonal.to_world( sample_direction ), BxDF::Event::Diffuse };
 		};
 
@@ -48,7 +47,6 @@ namespace BxDF
 		{
 			// One sided material
 			double const cos_theta = evaluate_direction.dot( idata.normal );
-#pragma warning ( suppress: 4244 )
 			return cos_theta > 0 ? albedo * inv_pi * cos_theta : Colour::Black;
 		};
 

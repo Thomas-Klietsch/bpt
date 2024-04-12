@@ -16,9 +16,9 @@ namespace Random
 
 	public:
 
-		Rand() {};
+		Rand() = delete;
 
-		Rand(uint32_t const& seed) {};
+		Rand( uint32_t const& seed ) {};
 
 		float get_float() override
 		{

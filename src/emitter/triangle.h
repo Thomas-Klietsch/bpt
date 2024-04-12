@@ -28,6 +28,8 @@ namespace Emitter
 
 		Colour energy;
 
+		double area;
+
 	public:
 
 		Triangle() = delete;
@@ -36,15 +38,14 @@ namespace Emitter
 			Double3 const& a,
 			Double3 const& b,
 			Double3 const& c,
-			Colour const& a_energy
+			Colour const& energy
 		) :
-			position( a ), edge1( b - a ), edge2( c - a )
+			position( a ), edge1( b - a ), edge2( c - a ), energy( energy )
 		{
 			Double3 const cross_product = edge1.cross( edge2 );
 			normal = ( cross_product ).normalise();
 			local_space = Orthogonal( normal );
-			double area = .5 * ( cross_product ).magnitude();
-			energy = ( a_energy * area ).clip();
+			area = .5 * ( cross_product ).magnitude();
 		};
 
 		std::tuple <Colour, Double3, Double3, Double3> emit(
@@ -58,7 +59,7 @@ namespace Emitter
 			float const v = ( 1.f - e2 ) * e1_sqrt;
 			Double3 point = position + edge1 * u + edge2 * v;
 			Double3 direction = Sample::HemiSphere( random );
-			return { energy, point, local_space.to_world( direction.normalise() ), normal };
+			return { energy * area, point, local_space.to_world( direction.normalise() ), normal };
 		};
 
 	};

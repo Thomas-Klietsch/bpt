@@ -1,10 +1,10 @@
 #pragma once
 
-#include "../ray/section.h"
-#include "../mathematics/double3.h"
-#include "../colour/colour.h"
 #include <cstdint>
+
+#include "../mathematics/double3.h"
 #include "../ray/intersection.h"
+#include "../ray/section.h"
 
 namespace Geometry
 {
@@ -20,9 +20,7 @@ namespace Geometry
 
 		virtual Ray::Intersection post_intersect(
 			Ray::Section const& ray,
-			double const& distance,
-			uint32_t const& polygon_id,
-			Double3 const& provisional_data
+			double const& distance
 		) const = 0;
 
 	};

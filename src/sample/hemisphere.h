@@ -1,10 +1,11 @@
 #pragma once
 
+#include <cmath>
+#include <utility>
+
+#include "../mathematics/constant.h"
 #include "../mathematics/double3.h"
 #include "../random/polymorphic.h"
-#include "../mathematics/constant.h"
-#include <utility>
-#include <cmath>
 
 namespace Sample
 {

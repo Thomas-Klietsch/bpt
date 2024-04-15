@@ -26,8 +26,6 @@ struct Colour
 	Colour operator += ( Colour const& value ) { r += value.r; g += value.g, b += value.b; return *this; };
 	Colour operator *= ( Colour const& value ) { r *= value.r; g *= value.g, b *= value.b; return *this; };
 
-	float max_value() const { return std::max( { r, g, b } ); };
-
 	bool is_black() const { return std::max( { r, g, b } ) < EPSILON_BLACK; };
 
 	// Limit values to [0;1]

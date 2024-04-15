@@ -35,6 +35,7 @@ namespace Render
 		uint32_t n_emitter{ 0 };
 
 		std::vector< std::shared_ptr<BxDF::Polymorphic> > bxdf;
+		uint32_t n_bxdf{ 0 };
 
 		Render::Camera camera;
 
@@ -199,12 +200,16 @@ namespace Render
 		BxDF::Polymorphic const* material( uint32_t const& id ) const
 		{
 			// TODO
+			if ( id >= n_bxdf )
+				return bxdf[ 0 ].get();
 			return bxdf[ id ].get();
 		};
 
 		Emitter::Polymorphic const& light( uint32_t const& id ) const
 		{
 			// TODO
+			if ( id >= n_emitter )
+				return *emitter[ 0 ];
 			return *emitter[ id ];
 		};
 

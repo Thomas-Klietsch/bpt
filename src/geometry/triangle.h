@@ -50,32 +50,31 @@ namespace Geometry
 			// Fast, minimum storage ray/triangle intersection, 1997
 
 			// Calculating determinant
-			Double3 p = ray.direction.cross( edge2 );
-			double d = edge1.dot( p );
+			Double3 const p = ray.direction.cross( edge2 );
+			double const d = edge1.dot( p );
 
 			// If determinant is near zero, ray lies in plane of triangle
-			if ( std::abs(d) < 0.000001 ) // TODO magic constant
+			if ( std::abs( d ) < 0.000001 )
 				return -1.0;
 
-			double inv_d = 1.0 / d;
+			double const inv_d = 1.0 / d;
 
-			// Calculate distance from triangle position to ray origin
+			Double3 const diff = ray.origin - position;
 
-			Double3 diff = ray.origin - position;
 			// Calculate u parameter and test bound
-			double u = diff.dot( p) * inv_d;
-			if ( ( u < 0 ) || ( u > 1 ) )
+			double const u = diff.dot( p ) * inv_d;
+			if ( ( u < 0. ) || ( u > 1. ) )
 				return -2.0;
 
 			// Calculate v parameter and test bound
-			Double3 q = diff.cross( edge1 );
-			double v = ray.direction.dot( q ) * inv_d;
-			if ( ( v < 0 ) || ( u + v > 1 ) )
+			Double3 const q = diff.cross( edge1 );
+			double const v = ray.direction.dot( q ) * inv_d;
+			if ( ( v < 0. ) || ( u + v > 1. ) )
 				return -3.0;
 
-			double t = q.dot( edge2 ) * inv_d;
+			double const t = q.dot( edge2 ) * inv_d;
 
-			if ( t < 0.000001 ) // TODO magic constant
+			if ( t < 0.000001 )
 				return -4.0;
 
 			return t;

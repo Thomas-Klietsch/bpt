@@ -180,7 +180,7 @@ namespace Integrator
 							Colour bxdf_eval = material.evaluate( direction, idata );
 
 							if ( !bxdf_eval.is_black() )
-								if ( !scene.occluded( Ray::Section( idata.point, direction ), distance - EPSILON_DISTANCE ) )
+								if ( ( distance > EPSILON_DISTANCE ) && ( !scene.occluded( Ray::Section( idata.point, direction ), distance - EPSILON_DISTANCE ) ) )
 									explicit_light += light_start[ i ].throughput * bxdf_eval * ( cos_theta / ( distance * distance ) );
 						}
 					}
@@ -193,7 +193,7 @@ namespace Integrator
 						Double3 diff = light_path[ i ].idata.point - idata.point;
 						Double3 direction = diff.normalise();
 						double distance = diff.magnitude();
-						if ( !scene.occluded( Ray::Section( idata.point, direction ), distance - EPSILON_DISTANCE ) )
+						if ( ( distance > EPSILON_DISTANCE ) && ( !scene.occluded( Ray::Section( idata.point, direction ), distance - EPSILON_DISTANCE ) ) )
 						{
 							Colour bxdf_eval = material.evaluate( direction, idata );
 							Colour path_eval = scene.material( light_path[ i ].idata.material_id )->evaluate( -direction, light_path[ i ].idata );

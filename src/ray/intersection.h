@@ -10,7 +10,7 @@ namespace Ray
 
 	struct Intersection
 	{
-		// post intersection
+		// Filled by post intersection in geometry
 		Double3 normal{ 0, 0, 0 };
 		Double3 point{ 0, 0, 0 };
 		Double3 local_wray{ 0, 0, 0 };

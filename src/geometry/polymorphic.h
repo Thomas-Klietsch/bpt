@@ -1,8 +1,5 @@
 #pragma once
 
-#include <cstdint>
-
-#include "../mathematics/double3.h"
 #include "../ray/intersection.h"
 #include "../ray/section.h"
 

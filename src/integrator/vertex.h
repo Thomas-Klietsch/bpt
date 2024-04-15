@@ -15,12 +15,6 @@ namespace Integrator
 
 		Vertex() = default;
 
-		// Emission path (materials)
-		Vertex( Ray::Intersection const& idata, Colour const& throughput ) :
-			idata( idata ),
-			throughput( throughput )
-		{};
-
 		// Emission start
 		Vertex( Double3 const& point, Double3 const& normal, Colour const& throughput ) :
 			throughput( throughput )
@@ -28,6 +22,12 @@ namespace Integrator
 			idata.point = point;
 			idata.normal = normal;
 		};
+
+		// Emission path (materials)
+		Vertex( Ray::Intersection const& idata, Colour const& throughput ) :
+			idata( idata ),
+			throughput( throughput )
+		{};
 
 	};
 

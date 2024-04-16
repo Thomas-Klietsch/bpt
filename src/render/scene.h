@@ -50,8 +50,16 @@ namespace Render
 			camera = Render::Camera( Double3( -278, -800, 273 ), Double3( -278, 0, 273 ), config );
 
 			bxdf.emplace_back( std::make_shared<BxDF::Lambert>( Colour( .8f, .8f, .8f ) ) ); // White
-			bxdf.emplace_back( std::make_shared<BxDF::Lambert>( Colour( 0.8f, 0.15f, 0.15f ) ) ); // Red
-			bxdf.emplace_back( std::make_shared<BxDF::Lambert>( Colour( 0.16f, 0.8f, 0.17f ) ) ); // Green
+			bxdf.emplace_back( std::make_shared<BxDF::Lambert>( Colour( 0.6f, 0.01f, 0.01f ) ) ); // Red
+			bxdf.emplace_back( std::make_shared<BxDF::Lambert>( Colour( 0.01f, 0.25f, 0.01f ) ) ); // Green
+
+			bxdf.emplace_back( std::make_shared<BxDF::Mirror>( Colour::White ) );
+
+			// Energy is split over two equal triangles
+			Colour energy = ( Colour( 0.f, .929f, .659f ) * 8.f + Colour( 1.f, .447f, .0f ) * 15.6f + Colour( 0.376f, 0.f, 0.f ) * 18.4f ) * 0.5;
+			bxdf.emplace_back( std::make_shared<BxDF::Emission>( energy ) );
+
+			uint32_t const tall_block_material = 0; // 3 for mirror
 
 			// The Cornell Box
 			// https://www.graphics.cornell.edu/online/box/
@@ -126,20 +134,20 @@ namespace Render
 				Double3( -472.0, 406.0, 330.0 )
 			};
 			// Back
-			geometry.emplace_back( std::make_shared<Geometry::Triangle>( tbox[ 6 ], tbox[ 7 ], tbox[ 3 ], 0 ) );
-			geometry.emplace_back( std::make_shared<Geometry::Triangle>( tbox[ 6 ], tbox[ 3 ], tbox[ 2 ], 0 ) );
+			geometry.emplace_back( std::make_shared<Geometry::Triangle>( tbox[ 6 ], tbox[ 7 ], tbox[ 3 ], tall_block_material ) );
+			geometry.emplace_back( std::make_shared<Geometry::Triangle>( tbox[ 6 ], tbox[ 3 ], tbox[ 2 ], tall_block_material ) );
 			// Front
-			geometry.emplace_back( std::make_shared<Geometry::Triangle>( tbox[ 0 ], tbox[ 1 ], tbox[ 5 ], 0 ) );
-			geometry.emplace_back( std::make_shared<Geometry::Triangle>( tbox[ 0 ], tbox[ 5 ], tbox[ 4 ], 0 ) );
+			geometry.emplace_back( std::make_shared<Geometry::Triangle>( tbox[ 0 ], tbox[ 1 ], tbox[ 5 ], tall_block_material ) );
+			geometry.emplace_back( std::make_shared<Geometry::Triangle>( tbox[ 0 ], tbox[ 5 ], tbox[ 4 ], tall_block_material ) );
 			// Top
-			geometry.emplace_back( std::make_shared<Geometry::Triangle>( tbox[ 5 ], tbox[ 1 ], tbox[ 3 ], 0 ) );
-			geometry.emplace_back( std::make_shared<Geometry::Triangle>( tbox[ 5 ], tbox[ 3 ], tbox[ 7 ], 0 ) );
+			geometry.emplace_back( std::make_shared<Geometry::Triangle>( tbox[ 5 ], tbox[ 1 ], tbox[ 3 ], tall_block_material ) );
+			geometry.emplace_back( std::make_shared<Geometry::Triangle>( tbox[ 5 ], tbox[ 3 ], tbox[ 7 ], tall_block_material ) );
 			// Left
-			geometry.emplace_back( std::make_shared<Geometry::Triangle>( tbox[ 4 ], tbox[ 5 ], tbox[ 7 ], 0 ) );
-			geometry.emplace_back( std::make_shared<Geometry::Triangle>( tbox[ 4 ], tbox[ 7 ], tbox[ 6 ], 0 ) );
+			geometry.emplace_back( std::make_shared<Geometry::Triangle>( tbox[ 4 ], tbox[ 5 ], tbox[ 7 ], tall_block_material ) );
+			geometry.emplace_back( std::make_shared<Geometry::Triangle>( tbox[ 4 ], tbox[ 7 ], tbox[ 6 ], tall_block_material ) );
 			// Right
-			geometry.emplace_back( std::make_shared<Geometry::Triangle>( tbox[ 2 ], tbox[ 3 ], tbox[ 1 ], 0 ) );
-			geometry.emplace_back( std::make_shared<Geometry::Triangle>( tbox[ 2 ], tbox[ 1 ], tbox[ 0 ], 0 ) );
+			geometry.emplace_back( std::make_shared<Geometry::Triangle>( tbox[ 2 ], tbox[ 3 ], tbox[ 1 ], tall_block_material ) );
+			geometry.emplace_back( std::make_shared<Geometry::Triangle>( tbox[ 2 ], tbox[ 1 ], tbox[ 0 ], tall_block_material ) );
 
 			// Offset to avoid "z fighting"
 			Double3 const light[ 4 ] =
@@ -149,20 +157,17 @@ namespace Render
 				Double3( -343.0, 227.0, 548.8 - 0.01 ),
 				Double3( -343.0, 332.0, 548.8 - 0.01 ),
 			};
-
-			Colour energy = Colour( 0.f, .929f, .659f ) * 8.f + Colour( 1.f, .447f, .0f ) * 15.6f + Colour( 0.376f, 0.f, 0.f ) * 18.4f;
-			bxdf.emplace_back( std::make_shared<BxDF::Emission>( energy.clip() ) );
-
-			geometry.emplace_back( std::make_shared<Geometry::Triangle>( light[ 2 ], light[ 3 ], light[ 1 ], 3 ) );
-			geometry.emplace_back( std::make_shared<Geometry::Triangle>( light[ 2 ], light[ 1 ], light[ 0 ], 3 ) );
-
+			// Visible emitters
+			geometry.emplace_back( std::make_shared<Geometry::Triangle>( light[ 2 ], light[ 3 ], light[ 1 ], 4 ) );
+			geometry.emplace_back( std::make_shared<Geometry::Triangle>( light[ 2 ], light[ 1 ], light[ 0 ], 4 ) );
+			// Emitters
 			emitter.emplace_back( std::make_shared<Emitter::Triangle>( light[ 2 ], light[ 3 ], light[ 1 ], energy ) );
 			emitter.emplace_back( std::make_shared<Emitter::Triangle>( light[ 2 ], light[ 1 ], light[ 0 ], energy ) );
 
-			bxdf.emplace_back( std::make_shared<BxDF::Mirror>( Colour::White ) );
-
+			// Update
 			n_geometry = static_cast<uint32_t>( geometry.size() );
 			n_emitter = static_cast<uint32_t>( emitter.size() );
+			n_bxdf = static_cast<uint32_t>( bxdf.size() );
 		};
 
 		std::tuple<bool, double, Ray::Intersection> intersect( Ray::Section const& ray ) const

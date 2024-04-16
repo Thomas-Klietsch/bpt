@@ -37,7 +37,7 @@ namespace BxDF
 		) const override
 		{
 			Double3 const sample_direction = Sample::HemiSphere( random );
-			return { albedo * inv_pi * sample_direction.z, idata.orthogonal.to_world( sample_direction ), BxDF::Event::Diffuse };
+			return { albedo * sample_direction.z, idata.orthogonal.to_world( sample_direction ), BxDF::Event::Diffuse };
 		};
 
 		Colour evaluate(
@@ -47,7 +47,7 @@ namespace BxDF
 		{
 			// One sided material
 			double const cos_theta = evaluate_direction.dot( idata.normal );
-			return cos_theta > 0 ? albedo * inv_pi * cos_theta : Colour::Black;
+			return cos_theta > 0 ? albedo * cos_theta : Colour::Black;
 		};
 
 	};

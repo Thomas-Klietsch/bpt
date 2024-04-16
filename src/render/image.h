@@ -62,7 +62,7 @@ namespace Render
 			// Ignore Microsoft Visual Studio warning about omp
 #pragma warning ( suppress: 6993 )
 #pragma omp parallel for
-			// Lazy arse parallel processing. xD
+			// Lazy arse parallel processing. This is terrible. xD
 			for ( int y = 0; y < image_height; ++y )
 				for ( int x = 0; x < image_width; ++x )
 					image_data[ x + y * image_width ] = integrator[ omp_get_thread_num() ]->process( x, y );
